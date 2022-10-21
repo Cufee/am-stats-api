@@ -1,0 +1,1 @@
+Tests are here because running a test from a folder requires .env to be in that folder
