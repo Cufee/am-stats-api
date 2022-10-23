@@ -15,6 +15,7 @@ import (
 	"github.com/byvko-dev/am-types/wargaming/v2/accounts"
 	"github.com/byvko-dev/am-types/wargaming/v2/statistics"
 	wg "github.com/cufee/am-wg-proxy-next/client"
+	"github.com/cufee/am-wg-proxy-next/helpers"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -28,7 +29,7 @@ type result[T data] struct {
 }
 
 func GetPlayerSession(accountId, days int, manual bool) (profile stats.AccountInfo, sessionFrame stats.CompleteFrame, snapshotFrame stats.CompleteFrame, err *e.Error) {
-	client := wg.NewClient(config.ProxyHost, time.Second*60)
+	client := wg.NewClient(config.ProxyHost, time.Second*10)
 	defer client.Close()
 
 	start := time.Now()
@@ -130,6 +131,9 @@ func GetPlayerSession(accountId, days int, manual bool) (profile stats.AccountIn
 		err = account.err
 		return
 	}
+	profile.AccountID = int(account.data.AccountID)
+	profile.Nickname = account.data.Nickname
+	profile.Realm = helpers.RealmFromID(int(account.data.AccountID))
 
 	achievements := <-achievementsResult
 	if achievements.err != nil {

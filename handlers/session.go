@@ -1,15 +1,12 @@
 package handlers
 
 import (
-	"errors"
 	"time"
 
-	"github.com/byvko-dev/am-stats-api/core/database"
 	"github.com/byvko-dev/am-stats-api/logic"
 	api "github.com/byvko-dev/am-types/api/generic/v1"
 	stats "github.com/byvko-dev/am-types/api/stats/v1"
 	"github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func GetPlayerSession(c *fiber.Ctx) error {
@@ -20,6 +17,7 @@ func GetPlayerSession(c *fiber.Ctx) error {
 		response.Error = api.ResponseError{
 			Message: "Invalid request body",
 			Context: err.Error(),
+			Code:    "INVALID_REQUEST",
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(response)
 	}
@@ -27,6 +25,7 @@ func GetPlayerSession(c *fiber.Ctx) error {
 		response.Error = api.ResponseError{
 			Message: "AccountID is required",
 			Context: "accountId is missing",
+			Code:    "INVALID_REQUEST",
 		}
 		return c.Status(fiber.StatusBadRequest).JSON(response)
 	}
@@ -34,31 +33,21 @@ func GetPlayerSession(c *fiber.Ctx) error {
 	profile, session, snapshot, bigErr := logic.GetPlayerSession(request.AccountID, request.Days, false)
 	if bigErr != nil {
 		response.Error = api.ResponseError{
+			Code:    "SESSION_REQUEST_FAILED",
 			Message: bigErr.Message,
 			Context: bigErr.Raw.Error(),
 		}
 		return c.Status(fiber.StatusInternalServerError).JSON(response)
 	}
 
-	account, err := database.FindAccountByID(request.AccountID)
-	if err != nil && !errors.Is(err, mongo.ErrNoDocuments) {
-		response.Error = api.ResponseError{
-			Message: "ACCOUNT_CACHE_ERROR",
-			Context: err.Error(),
-		}
-		return c.Status(fiber.StatusInternalServerError).JSON(response)
-	}
-	if account.AccountID == 0 {
-		account.AccountID = request.AccountID
-		account.Nickname = profile.Nickname
-	}
+	go logic.CheckPlayerCache(profile)
 
 	response.Data = stats.ResponsePayload{
-		AccountID: account.AccountID,
+		AccountID: profile.AccountID,
 		Timestamp: time.Now(),
 		Snapshot:  snapshot,
 		Session:   session,
-		Account:   account,
+		Account:   profile,
 	}
 	return c.Status(fiber.StatusOK).JSON(response)
 }

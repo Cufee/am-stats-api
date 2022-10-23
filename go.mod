@@ -2,10 +2,14 @@ module github.com/byvko-dev/am-stats-api
 
 go 1.19
 
+// replace github.com/byvko-dev/am-stats-updates => ../am-stats-updates
+
+// replace github.com/byvko-dev/am-types => ../am-types
+
 require (
 	github.com/byvko-dev/am-core v1.3.6-2
-	github.com/byvko-dev/am-stats-updates v0.0.7
-	github.com/byvko-dev/am-types v1.7.2
+	github.com/byvko-dev/am-stats-updates v0.1.0
+	github.com/byvko-dev/am-types v1.7.9-1
 	github.com/cufee/am-wg-proxy-next v1.3.2
 	github.com/gofiber/fiber/v2 v2.36.0
 	go.mongodb.org/mongo-driver v1.10.3

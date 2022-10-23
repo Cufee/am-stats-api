@@ -2,10 +2,10 @@ github.com/andybalholm/brotli v1.0.4 h1:V7DdXeJtZscaqfNuAdSRuRFzuiKlHSC/Zh3zl9qY
 github.com/andybalholm/brotli v1.0.4/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/byvko-dev/am-core v1.3.6-2 h1:TNn53RtPrn6B+ymXWmEGIQ0l4rDGSxdPCUunJo0y6vc=
 github.com/byvko-dev/am-core v1.3.6-2/go.mod h1:GZt9iQzoOcsxDUVFcYqMXolfaMG455c8IhcVhrOFJ94=
-github.com/byvko-dev/am-stats-updates v0.0.7 h1:0WLSN2Hk7tmMM5IaKclykQMOmq7WKkwzmXOuII6MbeY=
-github.com/byvko-dev/am-stats-updates v0.0.7/go.mod h1:zFQJVWjeJIB343rqAH7/nlAUKIGt5Kflw8pJ9lmTmC8=
-github.com/byvko-dev/am-types v1.7.2 h1:jrtnuTUEMS5AQmQ0OtxzbxC5Eg+GcpPmbtBvIT9ojwo=
-github.com/byvko-dev/am-types v1.7.2/go.mod h1:TCoD1hASh/YP+AT+Ueul35R20LWTpH1dGofrZNG/mK0=
+github.com/byvko-dev/am-stats-updates v0.1.0 h1:/B6QHQH2OM7rsPWvKl7GbA0aWL4b2vsJCtGOrUmuJbE=
+github.com/byvko-dev/am-stats-updates v0.1.0/go.mod h1:zFQJVWjeJIB343rqAH7/nlAUKIGt5Kflw8pJ9lmTmC8=
+github.com/byvko-dev/am-types v1.7.9-1 h1:dgxtyFnw3wZGdB7DuIueur+SS7yhLZ8Gsni8C0cwpP0=
+github.com/byvko-dev/am-types v1.7.9-1/go.mod h1:TCoD1hASh/YP+AT+Ueul35R20LWTpH1dGofrZNG/mK0=
 github.com/cufee/am-wg-proxy-next v1.3.2 h1:4LS3XGvWhKPutkYE15rrSC3iwNMHToh3IsdW9y0I6NY=
 github.com/cufee/am-wg-proxy-next v1.3.2/go.mod h1:nyI6M7Qu/Iq3AtAp/Gah4XBszF9VzfGxHVZdg6++xWI=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
