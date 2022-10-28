@@ -12,15 +12,15 @@ import (
 	"github.com/cufee/am-wg-proxy-next/helpers"
 )
 
-func CheckPlayerCache(account stats.AccountInfo) {
+func CheckPlayerCache(account stats.AccountInfo) stats.AccountInfo {
 	if account.AccountID == 0 {
 		logs.Error("account id is 0")
-		return
+		return account
 	}
 
 	cached, _ := database.FindAccountByID(int(account.AccountID))
 	if cached.AccountID == account.AccountID {
-		return
+		return account
 	}
 
 	client := wg.NewClient(config.ProxyHost, time.Second*10)
@@ -29,7 +29,7 @@ func CheckPlayerCache(account stats.AccountInfo) {
 	live, err := client.GetAccountByID(int(account.AccountID))
 	if err != nil {
 		logs.Error("Failed to get account from WG proxy: %v", err.Error())
-		return
+		return account
 	}
 
 	account.Nickname = live.Nickname
@@ -48,12 +48,12 @@ func CheckPlayerCache(account stats.AccountInfo) {
 	basicErr := database.UpdateAccount(account)
 	if basicErr != nil {
 		logs.Error("Failed to update account in db: %v", basicErr.Error())
-		return
+		return account
 	}
 
 	basicErr = cache.RecordPlayerSessions(account.Realm, false, account.AccountID)
 	if basicErr != nil {
 		logs.Error("Failed to record player sessions: %v", basicErr.Error())
-		return
 	}
+	return account
 }

@@ -175,6 +175,7 @@ func GetPlayerSession(accountId, days int, manual bool) (profile stats.AccountIn
 	if snapshot.data.TotalBattles == 0 {
 		vehicleCutoffTime = int(time.Now().Add(time.Hour).Unix()) // If there is no snapshot, we need to get any vehicle stats
 	}
+
 	liveSnapshot, baseErr := calculations.AccountSnapshot(account.data, achievements.data, vehicles.data, vehicleAchievements, vehicleCutoffTime, averages, glossaryData)
 	if baseErr != nil {
 		err = e.Input(baseErr, "failed to calculate live player snapshot")
@@ -195,11 +196,28 @@ func GetPlayerSession(accountId, days int, manual bool) (profile stats.AccountIn
 	sessionRegular.Subtract(&snapshot.data.Stats.Regular)
 	sessionRating.Subtract(&snapshot.data.Stats.Rating)
 
+	var sessionVehicles []statistics.VehicleStatsFrame
+	sessionVehiclesAchievements := make(map[int]statistics.AchievementsFrame)
+	for _, vehicle := range sessionRegular.Vehicles {
+		sessionVehicles = append(sessionVehicles, vehicle.VehicleStatsFrame)
+		sessionVehiclesAchievements[vehicle.VehicleStatsFrame.TankID] = vehicle.Achievements
+	}
+
+	sessionAccount := account.data
+	sessionAccount.Statistics.All = sessionRegular.Total
+	sessionAccount.Statistics.Rating = sessionRating.Total
+
+	sessionSnapshot, baseErr := calculations.AccountSnapshot(sessionAccount, sessionRegular.Achievements, sessionVehicles, sessionVehiclesAchievements, 0, averages, glossaryData)
+	if baseErr != nil {
+		err = e.Input(baseErr, "failed to calculate live player snapshot")
+		return
+	}
+
 	logs.Debug("Calculated session: %v", time.Since(start))
 
 	sessionFrame = stats.CompleteFrame{
-		Regular: sessionRegular,
-		Rating:  sessionRating,
+		Regular: sessionSnapshot.Stats.Regular,
+		Rating:  sessionSnapshot.Stats.Rating,
 	}
 	snapshotFrame = snapshot.data.Stats
 	err = nil

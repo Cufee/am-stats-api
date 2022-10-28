@@ -40,7 +40,8 @@ func GetPlayerSession(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(response)
 	}
 
-	go logic.CheckPlayerCache(profile)
+	// Add player data from cache or cache it
+	profile = logic.CheckPlayerCache(profile)
 
 	response.Data = stats.ResponsePayload{
 		AccountID: profile.AccountID,

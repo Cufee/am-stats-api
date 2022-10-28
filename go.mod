@@ -6,6 +6,8 @@ go 1.19
 
 // replace github.com/byvko-dev/am-types => ../am-types
 
+// replace github.com/byvko-dev/am-core => ../am-core
+
 require (
 	github.com/byvko-dev/am-core v1.3.6-2
 	github.com/byvko-dev/am-stats-updates v0.1.0
